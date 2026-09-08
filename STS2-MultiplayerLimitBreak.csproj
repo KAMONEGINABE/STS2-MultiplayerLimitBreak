@@ -26,10 +26,11 @@
     <ItemGroup>
         <Reference Include="sts2" HintPath="$(Sts2DataDir)\sts2.dll" Private="false"/>
         <Reference Include="0Harmony" HintPath="$(Sts2DataDir)\0Harmony.dll" Private="false"/>
-        <PackageReference Include="STS2.RitsuLib" Version="[0.5.4,)" PrivateAssets="all" ExcludeAssets="runtime"/>
+        <PackageReference Include="STS2.RitsuLib" Version="[0.5.14,)" PrivateAssets="all" ExcludeAssets="runtime"/>
     </ItemGroup>
 
     <ItemGroup>
+        <Compile Remove="tests\**\*.cs"/>
         <Content Include="mod_manifest.json"/>
         <EmbeddedResource Include="src\Settings\Localization\ModSettings\*.json">
             <LogicalName>$(RootNamespace).Settings.Localization.ModSettings.%(Filename)%(Extension)</LogicalName>

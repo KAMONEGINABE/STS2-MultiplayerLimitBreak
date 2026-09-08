@@ -2,15 +2,15 @@
   "id": "STS2-MultiplayerLimitBreak",
   "name": "Multiplayer Limit Break",
   "author": "OLC",
-  "description": "Expands multiplayer to 16 players with automatic capability validation, a versioned synchronized transport, extended room layouts, and configurable extra-player scaling.",
-  "version": "0.2.7",
+  "description": "Up to 16 players per run, with Steam room invites, match groups, and adjustable extra-player scaling.",
+  "version": "0.3.0",
   "has_pck": false,
   "has_dll": true,
   "affects_gameplay": true,
   "dependencies": [
     {
       "id": "STS2-RitsuLib",
-      "min_version": "0.5.4"
+      "min_version": "0.5.14"
     }
   ],
   "min_game_version": "0.107.1"

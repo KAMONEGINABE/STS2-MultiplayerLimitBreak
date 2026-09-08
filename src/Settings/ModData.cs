@@ -11,6 +11,11 @@ namespace STS2MultiplayerLimitBreak.Settings
 
         public static ModSettings Settings => Store.Get<ModSettings>(Const.SettingsKey);
 
+        public static void Save()
+        {
+            Store.Save(Const.SettingsKey);
+        }
+
         public static void Initialize()
         {
             using (RitsuLibFramework.BeginModDataRegistration(Const.ModId))

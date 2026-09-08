@@ -8,6 +8,7 @@ using MegaCrit.Sts2.Core.Multiplayer.Game.Lobby;
 using MegaCrit.Sts2.Core.Nodes.Multiplayer;
 using STS2MultiplayerLimitBreak.Network.Protocol;
 using STS2MultiplayerLimitBreak.Settings;
+using STS2MultiplayerLimitBreak.Rooms;
 using STS2RitsuLib.Patching.Core;
 using STS2RitsuLib.Patching.Models;
 
@@ -128,7 +129,31 @@ namespace STS2MultiplayerLimitBreak.Layout
             AddThemeStyleboxOverride("panel", CreatePanelStyle(new(0.18f, 0.58f, 0.38f, 1f)));
             ApplyResolvedGameFont();
             _label.AddThemeColorOverride("font_color", new(0.95f, 0.97f, 0.94f, 1f));
-            this.AddChildSafely(_label);
+            var content = new Control { MouseFilter = MouseFilterEnum.Ignore };
+            this.AddChildSafely(content);
+            content.AddChild(_label);
+            _label.SetAnchorsAndOffsetsPreset(LayoutPreset.FullRect);
+            var settings = RoomUi.SettingsButton(() =>
+            {
+                if (_lobby == null) return;
+                RoomService.Bind(_lobby.NetService);
+                RoomService.OpenSettings();
+            });
+            settings.Visible = RoomService.Available;
+            if (settings.Visible)
+            {
+                _label.OffsetLeft = 32;
+                _label.OffsetRight = -32;
+            }
+            settings.AnchorLeft = 1;
+            settings.AnchorRight = 1;
+            settings.AnchorTop = 0.5f;
+            settings.AnchorBottom = 0.5f;
+            settings.OffsetLeft = -28;
+            settings.OffsetRight = 0;
+            settings.OffsetTop = -14;
+            settings.OffsetBottom = 14;
+            content.AddChild(settings);
             RefreshSafely();
         }
 
@@ -144,6 +169,7 @@ namespace STS2MultiplayerLimitBreak.Layout
             _reportedRefreshFailure = false;
             _playerContainer = container;
             _lobby = lobby;
+            if (RoomService.Available) RoomService.Bind(lobby.NetService);
             _state = MlbLobbyProtocolRegistry.GetOrCreate(lobby);
             _state.Changed += OnLobbyChanged;
             RefreshSafely();

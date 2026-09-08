@@ -2,6 +2,7 @@ using System.Text.Json;
 using MegaCrit.Sts2.Core.Multiplayer;
 using MegaCrit.Sts2.Core.Multiplayer.Game;
 using MegaCrit.Sts2.Core.Runs;
+using STS2MultiplayerLimitBreak.Rooms;
 using STS2RitsuLib.Networking.Sidecar;
 
 namespace STS2MultiplayerLimitBreak.Settings
@@ -14,11 +15,13 @@ namespace STS2MultiplayerLimitBreak.Settings
 
         public static double ExtraPlayerScalingMultiplier => Current.ExtraPlayerScalingMultiplier;
 
+        private static INetGameService? ActiveNetService => RoomService.Session ?? RunManager.Instance?.NetService;
+
         private static HostSettingsSnapshot Current
         {
             get
             {
-                var netService = RunManager.Instance?.NetService;
+                var netService = ActiveNetService;
                 if (netService is NetClientGameService)
                     lock (Gate)
                     {
@@ -59,7 +62,7 @@ namespace STS2MultiplayerLimitBreak.Settings
 
         public static void PublishHostSettings(string reason)
         {
-            PublishHostSettings(RunManager.Instance?.NetService, reason);
+            PublishHostSettings(ActiveNetService, reason);
         }
 
         public static void ClearRemoteHostSettings()
@@ -112,7 +115,7 @@ namespace STS2MultiplayerLimitBreak.Settings
             if (ev.Topic != Const.HostSettingsSyncTopic)
                 return;
 
-            if (RunManager.Instance?.NetService is not NetClientGameService)
+            if (ActiveNetService is not NetClientGameService)
                 return;
 
             var snapshot = JsonSerializer.Deserialize<HostSettingsSnapshot>(ev.StateJson);
@@ -124,7 +127,7 @@ namespace STS2MultiplayerLimitBreak.Settings
 
         private static void OnHandshakeCompleted(SidecarHandshakeCompletedEvent ev)
         {
-            if (RunManager.Instance?.NetService is NetHostGameService host)
+            if (ActiveNetService is NetHostGameService host)
                 PublishHostSettings(host, $"handshake_completed:{ev.PeerNetId}");
         }
 

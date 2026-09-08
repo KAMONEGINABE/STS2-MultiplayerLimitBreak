@@ -4,6 +4,7 @@ using STS2MultiplayerLimitBreak.Layout;
 using STS2MultiplayerLimitBreak.Network;
 using STS2MultiplayerLimitBreak.Network.Protocol;
 using STS2MultiplayerLimitBreak.Settings;
+using STS2MultiplayerLimitBreak.Rooms;
 using STS2RitsuLib;
 
 namespace STS2MultiplayerLimitBreak
@@ -27,6 +28,8 @@ namespace STS2MultiplayerLimitBreak
 
             ApplyDifficultyScalingPatches();
             if (!IsActive) return;
+
+            RoomPatches.Initialize();
 
             Log.Info($"{Const.ModId} {Const.Version} loaded with wire protocol {Const.WireProtocolVersion}.");
         }
