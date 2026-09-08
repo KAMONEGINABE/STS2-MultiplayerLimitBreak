@@ -110,6 +110,7 @@ namespace STS2MultiplayerLimitBreak.Rooms
 
         public static void OpenMatchGroups()
         {
+            if (!Available) return;
             OpenPopup(true);
         }
 

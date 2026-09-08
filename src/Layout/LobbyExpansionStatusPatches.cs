@@ -6,6 +6,7 @@ using MegaCrit.Sts2.Core.Logging;
 using MegaCrit.Sts2.Core.Multiplayer.Game;
 using MegaCrit.Sts2.Core.Multiplayer.Game.Lobby;
 using MegaCrit.Sts2.Core.Nodes.Multiplayer;
+using MegaCrit.Sts2.Core.Platform;
 using STS2MultiplayerLimitBreak.Network.Protocol;
 using STS2MultiplayerLimitBreak.Settings;
 using STS2MultiplayerLimitBreak.Rooms;
@@ -87,6 +88,7 @@ namespace STS2MultiplayerLimitBreak.Layout
         private StartRunLobby? _lobby;
         private MlbLobbyProtocolState? _state;
         private bool _reportedRefreshFailure;
+        private TextureButton? _settingsButton;
 
         public static void AttachOrRebind(NRemoteLobbyPlayerContainer container, StartRunLobby lobby)
         {
@@ -139,12 +141,8 @@ namespace STS2MultiplayerLimitBreak.Layout
                 RoomService.Bind(_lobby.NetService);
                 RoomService.OpenSettings();
             });
-            settings.Visible = RoomService.Available;
-            if (settings.Visible)
-            {
-                _label.OffsetLeft = 32;
-                _label.OffsetRight = -32;
-            }
+            _settingsButton = settings;
+            UpdateSettingsVisibility();
             settings.AnchorLeft = 1;
             settings.AnchorRight = 1;
             settings.AnchorTop = 0.5f;
@@ -169,6 +167,7 @@ namespace STS2MultiplayerLimitBreak.Layout
             _reportedRefreshFailure = false;
             _playerContainer = container;
             _lobby = lobby;
+            UpdateSettingsVisibility();
             if (RoomService.Available) RoomService.Bind(lobby.NetService);
             _state = MlbLobbyProtocolRegistry.GetOrCreate(lobby);
             _state.Changed += OnLobbyChanged;
@@ -179,6 +178,14 @@ namespace STS2MultiplayerLimitBreak.Layout
         {
             Unsubscribe();
             Visible = false;
+        }
+
+        private void UpdateSettingsVisibility()
+        {
+            if (_settingsButton == null) return;
+            _settingsButton.Visible = RoomService.Available && _lobby?.NetService.Platform == PlatformType.Steam;
+            _label.OffsetLeft = _settingsButton.Visible ? 32 : 0;
+            _label.OffsetRight = _settingsButton.Visible ? -32 : 0;
         }
 
         private void Unsubscribe()

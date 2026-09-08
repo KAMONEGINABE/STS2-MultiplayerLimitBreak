@@ -35,6 +35,7 @@ namespace STS2MultiplayerLimitBreak.Settings
                         "page.description",
                         "Raises the multiplayer lobby capacity to 16 players."))
                     .AddSection("room_navigation", section => section
+                        .WithVisibleWhen(() => RoomService.Available)
                         .AddButton("match_groups", ModSettingsLocalization.T("rooms.manageGroups", "Manage match groups"),
                             ModSettingsLocalization.T("rooms.open", "Open"), RoomService.OpenMatchGroups))
                     .AddSection("scaling", AddScaling));

@@ -1,5 +1,6 @@
 using Godot;
 using MegaCrit.Sts2.Core.Multiplayer.Game;
+using MegaCrit.Sts2.Core.Platform;
 using STS2RitsuLib.Settings;
 using STS2RitsuLib.Ui.Shell.Theme;
 
@@ -172,7 +173,7 @@ namespace STS2MultiplayerLimitBreak.Rooms
 
         public static void AttachSettingsButton(Control parent, INetGameService session)
         {
-            if (!RoomService.Available || session.Type == NetGameType.Singleplayer) return;
+            if (!RoomService.Available || session.Platform != PlatformType.Steam || session.Type == NetGameType.Singleplayer) return;
             const string name = "MlbRoomSettings";
             var previous = parent.GetNodeOrNull<Control>(name);
             if (previous != null)
